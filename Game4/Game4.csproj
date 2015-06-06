@@ -66,6 +66,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Load\Menus.cme" />
     <None Include="Load\Splash.cme">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

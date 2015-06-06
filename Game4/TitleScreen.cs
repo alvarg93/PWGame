@@ -10,24 +10,30 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game4
 {
-    class TitleScreen : GameScreen
+    public class TitleScreen : GameScreen
     {
         SpriteFont font;
+        MenuManager menu;
 
         public override void LoadContent(ContentManager Content, InputManager inputManager)
         {
             base.LoadContent(Content, inputManager);
             if (font == null)
                 font = content.Load<SpriteFont>("Font1");
+            menu = new MenuManager();
+            menu.LoadContent(content, "Title");
         }
 
         public override void UnloadContent()
         {
             base.UnloadContent();
+            menu.UnloadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
+            inputManager.Update();
+            menu.Update(gameTime);
             if (inputManager.KeyPressed(Keys.Z))
             {
                 ScreenManager.Instance.AddScreen(new SplashScreen(),inputManager);
@@ -36,7 +42,7 @@ namespace Game4
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, "TitleScreen", new Vector2(100, 100), Color.Black);
+            menu.Draw(spriteBatch);
         }
     }
 }

@@ -27,6 +27,12 @@ namespace Game4
 
         Rectangle source;
 
+        int itemNumber;
+
+        List<Animation> tempAnimation;
+
+        SpriteFont font;
+
         private void SetMenuItems()
         {
             for (int i = 0; i < menuItems.Count; i++)
@@ -44,7 +50,34 @@ namespace Game4
 
         private void SetAnimations()
         {
+            Vector2 pos = position;
+            Vector2 dimensions;
+            for (int i = 0; i < menuImages.Count; i++)
+            {
+                
+                dimensions = new Vector2(font.MeasureString(menuItems[i]).X+menuImages[i].Width, font.MeasureString(menuItems[i]).Y+menuImages[i].Height);
 
+
+                tempAnimation = new List<Animation>();
+                for (int j = 0; j < animationTypes.Count; j++)
+                {
+                    switch (animationTypes[j])
+                    {
+                        case "Fade":
+                            tempAnimation.Add(new FadeAnimation());
+                            tempAnimation[tempAnimation.Count - 1].LoadContent(content, menuImages[i], menuItems[i], pos);
+                            break;
+                    }
+                }
+                
+                if(axis==1) {
+                    pos.X+=dimensions.X;
+                } else {
+                    pos.Y+=dimensions.Y;
+                }
+
+                animation.Add(tempAnimation);
+            }
         }
 
         public void LoadContent(ContentManager content, string id)
@@ -57,6 +90,7 @@ namespace Game4
             fileManager = new FileManager();
             attributes = new List<List<string>>();
             contents = new List<List<string>>();
+            itemNumber = 0;
             fileManager.LoadContent("Load/Menus.cme", attributes, contents, id);
 
             
@@ -66,6 +100,9 @@ namespace Game4
                 {
                     switch (attributes[i][j])
                     {
+                        case "Font":
+                            font = content.Load<SpriteFont>(contents[i][j]);
+                            break;
                         case "Item":
                             menuItems.Add(contents[i][j]);
                             break;
@@ -87,6 +124,9 @@ namespace Game4
                 }
             }
 
+            SetMenuItems();
+            SetAnimations();
+
         }
 
         public void UnloadContent()
@@ -101,12 +141,27 @@ namespace Game4
 
         public void Update(GameTime gameTime)
         {
+            for (int i = 0; i < animation.Count; i++)
+            {
+                for (int j = 0; j < animation[i].Count; j++)
+                {
+                    if (itemNumber == i)
+                        animation[i][j].IsActive = true;
+                    else
+                        animation[i][j].IsActive = false;
 
+                    animation[i][j].Update(gameTime);
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-
+            for(int i=0;i<animation.Count;i++)
+                for (int j = 0; j < animation[i].Count; j++)
+                {
+                    animation[i][j].Draw(spriteBatch);
+                }
         }
     }
 }
