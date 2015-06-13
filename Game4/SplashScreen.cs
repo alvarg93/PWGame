@@ -24,7 +24,7 @@ namespace Game4
         {
             base.LoadContent(Content, inputManager);
             if (font == null)
-                font = content.Load<SpriteFont>("Font1");
+                font = this.content.Load<SpriteFont>("Font1");
 
             fileManager = new FileManager();
             fade = new List<FadeAnimation>();
@@ -39,7 +39,7 @@ namespace Game4
                     switch (attributes[i][j])
                     {
                         case "Image":
-                            images.Add(content.Load<Texture2D>(contents[i][j]));
+                            images.Add(this.content.Load<Texture2D>(contents[i][j]));
                             fade.Add(new FadeAnimation());
                             break;
                     }

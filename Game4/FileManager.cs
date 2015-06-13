@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Game4
 {
-    class FileManager
+    public class FileManager
     {
         enum LoadType { Attributes, Contents }
 
@@ -19,6 +19,7 @@ namespace Game4
 
         public void LoadContent(string filename, List<List<string>> attributes, List<List<string>> contents)
         {
+
             using (StreamReader reader = new StreamReader(filename))
             {
                 while (!reader.EndOfStream)
@@ -81,6 +82,7 @@ namespace Game4
 
                     if (identifierFound)
                     {
+
                         tempContents = new List<string>();
                         if (line.Contains("Load="))
                         {

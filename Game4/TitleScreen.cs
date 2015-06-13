@@ -19,7 +19,7 @@ namespace Game4
         {
             base.LoadContent(Content, inputManager);
             if (font == null)
-                font = content.Load<SpriteFont>("Font1");
+                font = this.content.Load<SpriteFont>("Font1");
             menu = new MenuManager();
             menu.LoadContent(content, "Title");
         }
@@ -33,7 +33,7 @@ namespace Game4
         public override void Update(GameTime gameTime)
         {
             inputManager.Update();
-            menu.Update(gameTime);
+            menu.Update(gameTime,inputManager);
             if (inputManager.KeyPressed(Keys.Z))
             {
                 ScreenManager.Instance.AddScreen(new SplashScreen(),inputManager);

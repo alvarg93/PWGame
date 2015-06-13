@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Game4
 {
-    class Animation
+    public class Animation
     {
         protected Texture2D image;
         protected string text;
@@ -30,7 +30,7 @@ namespace Game4
             this.position = position;
             if (text != String.Empty)
             {
-                font = content.Load<SpriteFont>("Font1");
+                font = this.content.Load<SpriteFont>("Font1");
                 color = Color.DarkOrchid;
             }
             if (image != null)
@@ -52,11 +52,16 @@ namespace Game4
             get { return scale; }
             set { scale = value; }
         }
+        public SpriteFont Font
+        {
+            get { return font; }
+            set { font = value; }
+        }
 
         public bool IsActive
         {
             get { return isActive; }
-            set { isActive = value; }
+            set { isActive = value;}
         }
 
         public virtual void UnloadContent()

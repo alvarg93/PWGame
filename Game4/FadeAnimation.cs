@@ -62,7 +62,7 @@ namespace Game4
         {
             base.LoadContent(Content, image, text, position);
             increase = false;
-            fadeSpeed = 0.8f;
+            fadeSpeed = 1.0f;
             defaultTime = new TimeSpan(0, 0, 1);
             timer = defaultTime;
             activateValue = 0.0f;
@@ -103,6 +103,11 @@ namespace Game4
                         stopUpdating = false;
                     }
                 }
+            }
+            else
+            {
+                alpha = defaultAlpha;
+                stopUpdating = false;
             }        }
     }
 }

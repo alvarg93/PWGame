@@ -36,6 +36,8 @@ namespace Game4
         InputManager inputManager;
 
         Texture2D fadeTexture;
+        Texture2D nullImage;
+
         
         #endregion
         #region Properties
@@ -51,6 +53,12 @@ namespace Game4
             get { return dimensions; }
             set { dimensions = value; }
         }
+
+        public Texture2D NullImage
+        {
+            get { return nullImage; }
+            set { nullImage = value; }
+        }
         #endregion
 
         #region MainMethods
@@ -63,7 +71,8 @@ namespace Game4
             content = new ContentManager(Content.ServiceProvider, "Content");
             currentScreen.LoadContent(Content,inputManager);
 
-            fadeTexture = content.Load<Texture2D>("fade");
+            nullImage = this.content.Load<Texture2D>("null");
+            fadeTexture = this.content.Load<Texture2D>("fade");
             fade.LoadContent(content, fadeTexture, "",Vector2.Zero);
             fade.Scale = dimensions.X;
         }
@@ -102,11 +111,9 @@ namespace Game4
 
         private void Transition(GameTime gameTime)
         {
-            System.Diagnostics.Debug.WriteLine("Transition");
             fade.Update(gameTime);
             if (fade.Alpha == 1.0 && fade.Timer.TotalSeconds == 1.0f)
             {
-                System.Diagnostics.Debug.WriteLine("fade 1 time 1");
                 screenStack.Push(newScreen);
                 currentScreen.UnloadContent();
                 currentScreen = newScreen;
@@ -114,7 +121,6 @@ namespace Game4
             }
             else if (fade.Alpha == 0.0f)
             {
-                System.Diagnostics.Debug.WriteLine("fade 0");
                 transition = false;
                 fade.IsActive = false;
             }
