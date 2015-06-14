@@ -19,6 +19,12 @@ namespace Game4
 
         ContentManager content;
 
+        public ContentManager Content
+        {
+            get { return content; }
+            set { content = value; }
+        }
+
         Dictionary<string, GameScreen> gameScreens = new Dictionary<string, GameScreen>();
 
         Stack<GameScreen> screenStack = new Stack<GameScreen>();
@@ -31,6 +37,7 @@ namespace Game4
 
         bool transition;
 
+        Animation animation;
         FadeAnimation fade;
 
         InputManager inputManager;
@@ -63,8 +70,9 @@ namespace Game4
 
         #region MainMethods
         public void Initialize() {
-            currentScreen = new SplashScreen();
+            currentScreen = new GameplayScreen();
             inputManager = new InputManager();
+            animation = new Animation();
             fade = new FadeAnimation();
         }
         public void LoadContent(ContentManager Content) {
@@ -73,10 +81,11 @@ namespace Game4
 
             nullImage = this.content.Load<Texture2D>("null");
             fadeTexture = this.content.Load<Texture2D>("fade");
-            fade.LoadContent(content, fadeTexture, "",Vector2.Zero);
-            fade.Scale = dimensions.X;
+            animation.LoadContent(content, fadeTexture, "",Vector2.Zero);
+            animation.Scale = dimensions.X;
         }
         public void Update(GameTime gameTime) {
+            Camera.Instance.Update();
             if (!transition)
                 currentScreen.Update(gameTime);
             else Transition(gameTime);
@@ -84,14 +93,15 @@ namespace Game4
         public void Draw(SpriteBatch spriteBatch) {
             currentScreen.Draw(spriteBatch);
             if (transition)
-                fade.Draw(spriteBatch);
+                animation.Draw(spriteBatch);
         }
         public void AddScreen(GameScreen screen, InputManager inputManager)
         {
             transition = true;
             newScreen = screen;
-            fade.IsActive = true;
-            fade.Alpha = 0.0f;
+            animation.IsActive = true;
+            animation.Alpha = 0.0f;
+            fade.Increase = true;
             fade.ActivateValue = 1.0f;
             this.inputManager = inputManager;
         }
@@ -99,9 +109,9 @@ namespace Game4
         {
             transition = true;
             newScreen = screen;
-            fade.IsActive = true;
+            animation.IsActive = true;
             fade.ActivateValue = 1.0f;
-            fade.Alpha = alpha;
+            animation.Alpha = alpha;
             fade.Increase = true;
             this.inputManager = inputManager;
         }
@@ -111,18 +121,18 @@ namespace Game4
 
         private void Transition(GameTime gameTime)
         {
-            fade.Update(gameTime);
-            if (fade.Alpha == 1.0 && fade.Timer.TotalSeconds == 1.0f)
+            fade.Update(gameTime,ref animation);
+            if (animation.Alpha == 1.0 && fade.Timer.TotalSeconds == 1.0f)
             {
                 screenStack.Push(newScreen);
                 currentScreen.UnloadContent();
                 currentScreen = newScreen;
                 currentScreen.LoadContent(content, inputManager);
             }
-            else if (fade.Alpha == 0.0f)
+            else if (animation.Alpha == 0.0f)
             {
                 transition = false;
-                fade.IsActive = false;
+                animation.IsActive = false;
             }
         }
 

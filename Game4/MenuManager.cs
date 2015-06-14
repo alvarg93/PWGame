@@ -13,7 +13,10 @@ namespace Game4
     {
         List<string> menuItems,animationTypes, linkType, linkID;
         List<Texture2D> menuImages;
-        List<List<Animation>> animation;
+        List<Animation> animation;
+
+        FadeAnimation fadeAnimation;
+        SpriteSheetAnimation ssAnimation;
 
         ContentManager content;
 
@@ -28,8 +31,6 @@ namespace Game4
         Rectangle source;
 
         int itemNumber;
-
-        List<Animation> tempAnimation;
 
         SpriteFont font;
 
@@ -80,26 +81,15 @@ namespace Game4
                 else
                     pos.X = (ScreenManager.Instance.Dimensions.X - dimensions.X) / 2;
 
-                tempAnimation = new List<Animation>();
-                for (int j = 0; j < animationTypes.Count; j++)
-                {
-                    switch (animationTypes[j])
-                    {
-                        case "Fade":
-                            tempAnimation.Add(new FadeAnimation());
-                            tempAnimation[tempAnimation.Count - 1].LoadContent(content, menuImages[i], menuItems[i], pos);
-                            tempAnimation[tempAnimation.Count - 1].Font = font;
-                            break;
-                    }
-                }
+                animation.Add(new Animation());
+                animation[animation.Count - 1].LoadContent(content, menuImages[i], menuItems[i], pos);
+                animation[animation.Count - 1].Font = font;
                 
                 if(axis==1) {
                     pos.X+=dimensions.X;
                 } else {
                     pos.Y+=dimensions.Y;
                 }
-                if(tempAnimation.Count>0)
-                animation.Add(tempAnimation);
             }
         }
 
@@ -109,12 +99,14 @@ namespace Game4
             menuItems = new List<string>();
             animationTypes = new List<string>();
             menuImages = new List<Texture2D>();
-            animation = new List<List<Animation>>();
+            animation = new List<Animation>();
             fileManager = new FileManager();
             attributes = new List<List<string>>();
             contents = new List<List<string>>();
             linkType = new List<string>();
             linkID = new List<string>();
+            fadeAnimation = new FadeAnimation();
+            ssAnimation = new SpriteSheetAnimation();
             itemNumber = 0;
             align = "";
             fileManager.LoadContent("Load/Menus.cme", attributes, contents, id);
@@ -202,6 +194,13 @@ namespace Game4
                     Type newClass = Type.GetType("Game4." + linkID[itemNumber]);
                     ScreenManager.Instance.AddScreen((GameScreen)Activator.CreateInstance(newClass),inputManager);
                 }
+                if (linkType[itemNumber] == "Action")
+                {
+                    if (linkID[itemNumber] == "Quit")
+                    {
+                        Game1.exit = true;
+                    }
+                }
             }
 
             if (itemNumber < 0) itemNumber = 0;
@@ -209,25 +208,35 @@ namespace Game4
 
             for (int i = 0; i < animation.Count; i++)
             {
-                for (int j = 0; j < animation[i].Count; j++)
+                Animation a = animation[i];
+                for (int j = 0; j < animationTypes.Count; j++)
                 {
                     if (itemNumber == i)
-                        animation[i][j].IsActive = true;
+                        animation[i].IsActive = true;
                     else
-                        animation[i][j].IsActive = false;
+                        animation[i].IsActive = false;
 
-                    animation[i][j].Update(gameTime);
+
+                    switch (animationTypes[j])
+                    {
+                        case "Fade":
+                            fadeAnimation.Update(gameTime, ref a);
+                            break;
+                        case "SSheet":
+                            ssAnimation.Update(gameTime, ref a);
+                            break;
+                    }
                 }
+                animation[i] = a;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             for(int i=0;i<animation.Count;i++)
-                for (int j = 0; j < animation[i].Count; j++)
-                {
-                    animation[i][j].Draw(spriteBatch);
-                }
+            {
+                animation[i].Draw(spriteBatch);
+            }
         }
     }
 }

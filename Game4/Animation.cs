@@ -11,17 +11,35 @@ namespace Game4
 {
     public class Animation
     {
-        protected Texture2D image;
-        protected string text;
-        protected SpriteFont font;
-        protected Color color;
-        protected Rectangle sourceRect;
-        protected float rotation, scale, axis, alpha;
-        protected Vector2 origin, position;
-        protected ContentManager content;
-        protected bool isActive;
+        private Texture2D image;
 
-        public virtual void LoadContent(ContentManager Content, Texture2D image, string text, Vector2 position)
+        public Texture2D Image
+        {
+            get { return image; }
+            set { image = value; }
+        }
+        private string text;
+        private SpriteFont font;
+        private Color color;
+        private Rectangle sourceRect;
+
+        public Rectangle SourceRect
+        {
+            get { return sourceRect; }
+            set { sourceRect = value; }
+        }
+        private float rotation, scale, axis, alpha;
+        private Vector2 origin, position;
+
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+        private ContentManager content;
+        private bool isActive;
+
+        public void LoadContent(ContentManager Content, Texture2D image, string text, Vector2 position)
         {
 
             this.content = new ContentManager(Content.ServiceProvider, "Content");
@@ -31,15 +49,18 @@ namespace Game4
             if (text != String.Empty)
             {
                 font = this.content.Load<SpriteFont>("Font1");
-                color = Color.DarkOrchid;
+                color = Color.White;
             }
-            if (image != null)
-                sourceRect = new Rectangle(0,0,image.Width, image.Height);
             rotation = 0.0f;
             axis = 0.0f;
             scale = 1.0f;
             alpha = 1.0f;
             isActive = false;
+
+            if(frames==Vector2.Zero) frames = new Vector2(1, 1);
+            currentFrame = new Vector2(0, 0);
+            if(image!=null)
+                sourceRect = new Rectangle((int)currentFrame.X * FrameWidth, (int)currentFrame.Y * FrameHeight, FrameWidth, FrameHeight);
         }
 
         public virtual float Alpha
@@ -64,7 +85,27 @@ namespace Game4
             set { isActive = value;}
         }
 
-        public virtual void UnloadContent()
+
+        private Vector2 frames;
+        private Vector2 currentFrame;
+
+        public int FrameWidth { get { return image.Width / (int)frames.X; } }
+
+        public int FrameHeight { get { return image.Height / (int)frames.Y; } }
+
+        public Vector2 CurrentFrame
+        {
+            get { return currentFrame; }
+            set { currentFrame = value; }
+        }
+
+        public Vector2 Frames
+        {
+            get { return frames; }
+            set { frames = value; }
+        }
+
+        public void UnloadContent()
         {
             content.Unload();
             text = String.Empty;
@@ -74,16 +115,20 @@ namespace Game4
 
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, ref Animation a)
         {
 
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch) {
+        public void Draw(SpriteBatch spriteBatch) {
             if (image != null)
             {
                 origin = new Vector2(sourceRect.Width / 2, sourceRect.Height / 2);
                 spriteBatch.Draw(image, position + origin, sourceRect, Color.White * alpha, rotation, origin, scale, SpriteEffects.None, 0.0f);
+            }
+            else
+            {
+                Console.WriteLine("IMAGE NULL!!1");
             }
 
             if (text != String.Empty)

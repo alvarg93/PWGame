@@ -11,6 +11,7 @@ namespace Game4
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public static bool exit = false;
 
         public Game1()
         {
@@ -33,6 +34,7 @@ namespace Game4
             graphics.PreferredBackBufferWidth = (int) ScreenManager.Instance.Dimensions.X;
             graphics.PreferredBackBufferHeight = (int) ScreenManager.Instance.Dimensions.Y;
             graphics.ApplyChanges();
+            GlobalRandom.Instance.Init();
 
             base.Initialize();
         }
@@ -66,7 +68,7 @@ namespace Game4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (exit)
                 Exit();
 
             // TODO: Add your update logic here
@@ -80,9 +82,9 @@ namespace Game4
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.AlphaBlend,null,null,null,null,Camera.Instance.ViewMatrix);
             ScreenManager.Instance.Draw(spriteBatch);
             spriteBatch.End();
             // TODO: Add your drawing code here

@@ -39,14 +39,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameScreen.cs" />
+    <Compile Include="GlobalRandom.cs" />
+    <Compile Include="PlayerHit.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="Layers.cs" />
+    <Compile Include="Layer.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MenuManager.cs" />
     <Compile Include="Player.cs" />
@@ -56,6 +60,7 @@
     <Compile Include="GameplayScreen.cs" />
     <Compile Include="SplashScreen.cs" />
     <Compile Include="SpriteSheetAnimation.cs" />
+    <Compile Include="Tile.cs" />
     <Compile Include="TitleScreen.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,8 +78,23 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Load\Maps\Map1.cme">
+    <None Include="Load\SubBoss.cme">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Load\Boss.cme">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Load\PlayerHit.cme">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Load\EnemyHit.cme">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Load\Ghost.cme">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Load\Maps\Map1.cme">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Load\Menus.cme">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

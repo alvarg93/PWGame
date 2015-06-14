@@ -13,10 +13,12 @@ namespace Game4
     public class SplashScreen : GameScreen
     {
         SpriteFont font;
-        List<FadeAnimation> fade;
+        List<Animation> animations;
         List<Texture2D> images;
 
         FileManager fileManager;
+
+        FadeAnimation fade;
 
         int imageNumber = 0;
 
@@ -27,7 +29,8 @@ namespace Game4
                 font = this.content.Load<SpriteFont>("Font1");
 
             fileManager = new FileManager();
-            fade = new List<FadeAnimation>();
+            animations = new List<Animation>();
+            fade = new FadeAnimation();
             images = new List<Texture2D>();
 
             fileManager.LoadContent("Load/Splash.cme", attributes, contents);
@@ -40,16 +43,16 @@ namespace Game4
                     {
                         case "Image":
                             images.Add(this.content.Load<Texture2D>(contents[i][j]));
-                            fade.Add(new FadeAnimation());
+                            animations.Add(new Animation());
                             break;
                     }
                 }
             }
 
-            for (int i = 0; i < fade.Count; i++)
+            for (int i = 0; i < animations.Count; i++)
             {
-                fade[i].LoadContent(content, images[i], "", Vector2.Zero);
-                fade[i].IsActive = true;
+                animations[i].LoadContent(content, images[i], "", Vector2.Zero);
+                animations[i].IsActive = true;
             }
         }
 
@@ -62,21 +65,27 @@ namespace Game4
         public override void Update(GameTime gameTime)
         {
             inputManager.Update();
-            if (fade[imageNumber].Alpha == 0.0f)
-                imageNumber++;
+            if (imageNumber >= animations.Count || inputManager.KeyPressed(Keys.Escape))
+                ScreenManager.Instance.AddScreen(new TitleScreen(), inputManager);
+            else
+            {
+                Animation anim = animations[imageNumber];
+                fade.Update(gameTime, ref anim);
+                animations[imageNumber] = anim;
 
-            if(imageNumber<fade.Count)
-            fade[imageNumber].Update(gameTime);
-
-
-            if (imageNumber>=fade.Count || inputManager.KeyPressed(Keys.Z))
-                ScreenManager.Instance.AddScreen(new TitleScreen(),inputManager);
+                Console.WriteLine(imageNumber + " " + animations.Count);
+                if (animations[imageNumber].Alpha == 0.0f)
+                {
+                    imageNumber++;
+                    fade = new FadeAnimation();
+                }
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (imageNumber < fade.Count)
-                fade[imageNumber].Draw(spriteBatch);
+            if (imageNumber < animations.Count)
+                animations[imageNumber].Draw(spriteBatch);
         }
 
     }
