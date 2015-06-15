@@ -1,2 +1,2 @@
-﻿Load=[Image][TotalFrames][ModelFrames][ModelFramesOffset][Health][Damage]
-[TileSets/Monsters][12 8][3 4][9 0][1000][20]
+﻿Load=[Image][TotalFrames][ModelFrames][ModelFramesOffset][Health][Damage][Range][DecisionCounter][AttackReload][DropRate]
+[TileSets/Monsters][12 8][3 4][9 0][1000][20][50][800][1200][4]

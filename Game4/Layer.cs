@@ -53,7 +53,7 @@ namespace Game4
             solid = new List<string>();
             motion = new List<string>();
             fileManager = new FileManager();
-            content = ScreenManager.Instance.Content;
+            content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider,"Content");
             tileDimensions = new Vector2(32, 32);
             int layerYCount = 0;
 
@@ -151,6 +151,7 @@ namespace Game4
 
         public void UnloadContent()
         {
+            content.Unload();
             tiles.Clear();
             attributes.Clear();
             contents.Clear();

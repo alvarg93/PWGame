@@ -13,8 +13,10 @@ namespace Game4
     public class PlayerHit : Entity
     {
         string hitID;
-        int damage;
+        protected int dmgModifier=0,range=10;
         GameplayScreen gpScreen;
+        Vector2 direction;
+        Rectangle casterRect;
         string[] hitSounds = { "Whooosh!", "Booom", "GRbhrg!!!" };
         int hitSoundsCnt = 0;
 
@@ -24,17 +26,17 @@ namespace Game4
             set { hitID = value; }
         }
 
-        public PlayerHit(string hitID, Vector2 position, int damage, GameplayScreen gpScreen)
+        public PlayerHit(string hitID, Rectangle casterRect, Vector2 direction, GameplayScreen gpScreen, int dmgModifier)
         {
             fileManager = new FileManager();
             moveAnimation = new Animation();
             ssAnimation = new SpriteSheetAnimation();
             moveSpeed = 150;
-            this.damage = damage;
             this.hitID = hitID;
+            this.casterRect = casterRect;
+            this.direction = direction;
             this.gpScreen = gpScreen;
-            Position = position;
-            Console.WriteLine(Position.X + " " + Position.Y);
+            this.dmgModifier = dmgModifier;
         }
 
 
@@ -56,6 +58,12 @@ namespace Game4
                         case "Health":
                             Health = int.Parse(contents[i][j]);
                             break;
+                        case "Damage":
+                            damage = int.Parse(contents[i][j]);
+                            break;
+                        case "Range":
+                            range = int.Parse(contents[i][j]);
+                            break;
                         case "TotalFrames":
                             string[] frames = contents[i][j].Split(' ');
                             totalFrames = new Vector2(int.Parse(frames[0]), int.Parse(frames[1]));
@@ -74,7 +82,7 @@ namespace Game4
                     }
                 }
             }
-            /*
+            
             int cellHeight = image.Height / (int)totalFrames.Y;
             int cellWidth = image.Width / (int)totalFrames.X;
 
@@ -87,7 +95,9 @@ namespace Game4
             Texture2D subtexture = new Texture2D(image.GraphicsDevice, sourceRect.Width, sourceRect.Height);
             image.Dispose();
             image = subtexture;
-            subtexture.SetData<Color>(imagePiece);*/
+            subtexture.SetData<Color>(imagePiece);
+
+            Position = (new Vector2(casterRect.X + casterRect.Width / 2, casterRect.Y + casterRect.Height / 2) + range * direction) - new Vector2(cellWidth/2,cellHeight/2);
 
             moveAnimation.Frames = modelFrames;
             moveAnimation.LoadContent(content, image, hitSounds[GlobalRandom.Instance.Next(0, 3)], Position);
@@ -122,10 +132,11 @@ namespace Game4
                 for (int i = 0; i < gpScreen.Enemies.Count; i++)
                 {
                     Enemy enemy = gpScreen.Enemies[i];
+                    if(!enemy.Dead)
                     if (Collision.CheckCollision(new Rectangle((int)Position.X, (int)Position.Y, moveAnimation.FrameWidth, moveAnimation.FrameHeight), 
                         new Rectangle((int)enemy.Position.X, (int)enemy.Position.Y, enemy.moveAnimation.FrameWidth, enemy.moveAnimation.FrameHeight)))
                     {
-                        enemy.Health -= damage;
+                        enemy.TakeDamage(damage+dmgModifier);
                         Console.WriteLine(enemy.EnemyID + " " + enemy.Health);
                     }
                 }

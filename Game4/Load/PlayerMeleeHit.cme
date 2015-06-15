@@ -1,2 +1,2 @@
 ﻿Load=[Image][TotalFrames][ModelFrames][ModelFramesOffset][Damage][Range]
-[TileSets/Attack2][5 5][5 1][0 1][30][90]
+[TileSets/Slash][5 3][5 1][0 1][50][20]

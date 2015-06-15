@@ -19,8 +19,20 @@ namespace Game4
             set { image = value; }
         }
         private string text;
+
+        public string Text
+        {
+            get { return text; }
+            set { text = value; }
+        }
         private SpriteFont font;
         private Color color;
+
+        public Color Color
+        {
+            get { return color; }
+            set { color = value; }
+        }
         private Rectangle sourceRect;
 
         public Rectangle SourceRect
@@ -126,12 +138,8 @@ namespace Game4
                 origin = new Vector2(sourceRect.Width / 2, sourceRect.Height / 2);
                 spriteBatch.Draw(image, position + origin, sourceRect, Color.White * alpha, rotation, origin, scale, SpriteEffects.None, 0.0f);
             }
-            else
-            {
-                Console.WriteLine("IMAGE NULL!!1");
-            }
 
-            if (text != String.Empty)
+            if (text!=null && text != String.Empty)
             {
                 origin = new Vector2(font.MeasureString(text).X / 2, font.MeasureString(text).Y / 2);
                 spriteBatch.DrawString(font, text, position + origin, color * alpha, rotation, origin, scale, SpriteEffects.None, 0.0f);

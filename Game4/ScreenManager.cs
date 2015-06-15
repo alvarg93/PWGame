@@ -90,13 +90,17 @@ namespace Game4
                 currentScreen.Update(gameTime);
             else Transition(gameTime);
         }
-        public void Draw(SpriteBatch spriteBatch) {
+        public void Draw(SpriteBatch spriteBatch)
+        {
             currentScreen.Draw(spriteBatch);
             if (transition)
+            {
                 animation.Draw(spriteBatch);
+            }
         }
         public void AddScreen(GameScreen screen, InputManager inputManager)
         {
+            Camera.Instance.SetFocalPoint(new Vector2(Dimensions.X / 2, Dimensions.Y / 2));
             transition = true;
             newScreen = screen;
             animation.IsActive = true;
@@ -107,6 +111,7 @@ namespace Game4
         }
         public void AddScreen(GameScreen screen, InputManager inputManager, float alpha)
         {
+            Camera.Instance.SetFocalPoint(new Vector2(Dimensions.X / 2, Dimensions.Y / 2));
             transition = true;
             newScreen = screen;
             animation.IsActive = true;
@@ -128,6 +133,7 @@ namespace Game4
                 currentScreen.UnloadContent();
                 currentScreen = newScreen;
                 currentScreen.LoadContent(content, inputManager);
+                Console.WriteLine("Transition has finished");
             }
             else if (animation.Alpha == 0.0f)
             {
