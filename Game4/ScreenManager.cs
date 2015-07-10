@@ -70,7 +70,7 @@ namespace Game4
 
         #region MainMethods
         public void Initialize() {
-            currentScreen = new GameplayScreen();
+            currentScreen = new SplashScreen();
             inputManager = new InputManager();
             animation = new Animation();
             fade = new FadeAnimation();
